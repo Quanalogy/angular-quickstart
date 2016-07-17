@@ -1,0 +1,12 @@
+#Ignore .idea folder
+.idea/*
+#Ignore node_modules - you should install them yourself with npm install
+node_modules/*
+#Ignore typings - you shuld install them yourself with typings install
+typings/*
+#This is written in .ts which is compiled into .js, this you also should do by yourself, hence not included
+*.js
+*.map
+
+#But these .js files are ok
+!systemjs.config.js

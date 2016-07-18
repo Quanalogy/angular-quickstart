@@ -4,19 +4,9 @@
 import { Component } from '@angular/core';
 import {Hero} from './hero';
 import {HeroDetailComponent} from './hero-detail.component';
+import {HeroService} from './hero.service';
+import {OnInit} from '@angular/core';
 
-const HEROES: Hero[] = [
-    { id: 11, name: 'Mr. Nice' },
-    { id: 12, name: 'Narco' },
-    { id: 13, name: 'Bombasto' },
-    { id: 14, name: 'Celeritas' },
-    { id: 15, name: 'Magneta' },
-    { id: 16, name: 'RubberMan' },
-    { id: 17, name: 'Dynama' },
-    { id: 18, name: 'Dr IQ' },
-    { id: 19, name: 'Magma' },
-    { id: 20, name: 'Tornado' }
-];
 @Component({
     selector: 'my-app',
     template: `
@@ -80,12 +70,33 @@ const HEROES: Hero[] = [
       border-radius: 4px 0 0 4px;
     }
   `],
-    directives: [HeroDetailComponent]
+    directives: [HeroDetailComponent],   //Here we are making sure that we can use the
+                                        // tag "<my-hero-detail></my-hero-detail>
+                                        // Angular needs to know that when new tags appear that
+                                        // they are not spelled the wrong way, hence tagging
+                                        // them as directives
+    providers: [HeroService]            //The providers array tells Angular to create a fresh
+                                        // instance of the HeroService when it creates a new
+                                        // AppComponent. The AppComponent can use that service
+                                        // to get heroes and so can every child component of
+                                        // its component tree.
+
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
     title = 'Tour of Heroes';
-    heroes = HEROES;
+    heroes: Hero[];
     selectedHero: Hero;
     counter = 0;
     onSelect(hero: Hero) { this.selectedHero = hero; this.counter = this.counter +1;}
+    constructor(private heroService: HeroService){
+
+    }
+    getHeroes(){
+        this.heroService.getHeroes().then(heroes =>         //Since getHeroes is handled in a async way, we need to wait
+            this.heroes = heroes                            // our assignment till it is back (the then keyword)
+        );
+    }
+    ngOnInit(){
+        this.getHeroes();
+    }
 }
